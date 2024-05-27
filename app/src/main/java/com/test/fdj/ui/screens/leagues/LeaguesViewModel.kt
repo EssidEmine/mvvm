@@ -7,11 +7,12 @@ import com.test.fdj.data.model.Leagues
 import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCase
 import com.test.fdj.ui.dispatchers.DispatcherProvider
 import com.test.fdj.ui.screens.leagues.mapper.LeaguesUiModelMapper
-import com.test.fdj.ui.screens.leagues.model.ErrorUiModel
+import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModel
 import com.test.fdj.ui.screens.leagues.model.LeaguesNavigation
 import com.test.fdj.ui.screens.leagues.model.LeaguesUiModel
 import com.test.fdj.ui.statehandlers.UiModelHandlerFactory
 import com.test.fdj.utils.Result
+import com.test.fdj.utils.filterByText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class LeaguesViewModel @Inject constructor(
                             uiModelHandler.updateUiModel { uiModel ->
                                 uiModel.copy(
                                     isLoading = false,
-                                    error = ErrorUiModel(
+                                    error = LeaguesErrorUiModel(
                                         result.exception.message ?: "Unknown error",
                                     )
                                 )
@@ -70,9 +71,8 @@ class LeaguesViewModel @Inject constructor(
 
     fun onSearchTextChange(text: String) {
         viewModelScope.launch(dispatcherProvider.io) {
-
-            val filteredLeagues = leagues.content?.filter { league ->
-                league.name.contains(text, ignoreCase = true)
+            val filteredLeagues = leagues.content?.filterByText(text) { league ->
+                league.name
             } ?: leagues.content
 
             filteredLeagues?.let {

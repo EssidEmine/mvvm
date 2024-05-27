@@ -12,7 +12,7 @@ class TeamsMapperImpl @Inject constructor() : TeamsMapper {
     override fun map(response: Response<TeamsDto>): Result<Teams> {
         return if (response.isSuccessful) {
             Result.Success(
-                Teams(teams = response.body()?.teams?.map {
+                Teams(content = response.body()?.teams?.map {
                     Team(
                         idTeam = it.idTeam,
                         strTeam = it.strTeam,

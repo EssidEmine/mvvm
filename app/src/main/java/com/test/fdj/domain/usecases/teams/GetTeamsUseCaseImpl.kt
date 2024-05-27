@@ -21,13 +21,13 @@ class GetTeamsUseCaseImpl @Inject constructor(
                         }
 
                         is Result.Success -> {
-                            val sortedFilteredTeams = result.data.teams?.sortedByDescending {
+                            val sortedFilteredTeams = result.data.content?.sortedByDescending {
                                 it.strTeam
                             }?.filterIndexed { index, _ ->
                                 index % 2 == 0
                             }
 
-                            emit(Result.Success(Teams(teams = sortedFilteredTeams)))
+                            emit(Result.Success(Teams(content = sortedFilteredTeams)))
                         }
                     }
                 }

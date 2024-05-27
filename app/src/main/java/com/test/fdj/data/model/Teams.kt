@@ -1,7 +1,7 @@
 package com.test.fdj.data.model
 
 data class Teams(
-    val teams: List<Team>?
+    val content: List<Team>?
 )
 
 data class Team(

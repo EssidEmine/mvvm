@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class LeaguesUiModel(
     val isLoading: Boolean = false,
-    val error: ErrorUiModel? = null,
+    val error: LeaguesErrorUiModel? = null,
     val leagues: List<LeagueUiModel>? = null,
     val isSearching: Boolean = false,
     val navigation: LeaguesNavigation = LeaguesNavigation.NONE
@@ -18,7 +18,7 @@ data class LeagueUiModel(
 ) : Parcelable
 
 @Parcelize
-data class ErrorUiModel(
+data class LeaguesErrorUiModel(
     val label: String,
 ) : Parcelable
 
