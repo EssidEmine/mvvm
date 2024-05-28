@@ -1,14 +1,25 @@
 package com.test.fdj.ui
 
-interface Destination {
-    val route: String
-}
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
-object Leagues: Destination{
-    override val route: String = "leagues"
-}
-object Teams: Destination{
-    override val route: String = "teams"
-    const val teamsArgs = "leagueName"
-    val routeWithArgs: String = "${route}/{${teamsArgs}}"
+sealed class Destination(
+    val route: String
+) {
+
+    data object Leagues : Destination("leagues")
+    data object Teams : Destination("teams/{$TEAMS_ARGS}") {
+
+        fun buildUri(teamsArgs: String) = "teams/$teamsArgs"
+
+        fun teamsTypeNavArgument() = navArgument(TEAMS_ARGS) {
+            type = NavType.StringType
+            nullable = false
+        }
+    }
+
+    companion object {
+
+        const val TEAMS_ARGS = "leagueName"
+    }
 }

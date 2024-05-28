@@ -3,12 +3,9 @@ package com.test.fdj.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.test.fdj.ui.screens.leagues.LeaguesScreen
 import com.test.fdj.ui.screens.teams.TeamsScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,29 +19,25 @@ class MainActivity : AppCompatActivity() {
             val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = Leagues.route,
+                startDestination = Destination.Leagues.route,
             ) {
-                composable(route = Leagues.route) {
+                composable(route = Destination.Leagues.route) {
                     LeaguesScreen(
                         onBackPressed = {
                             finish()
                         },
                         onShowTeams = { leagueName ->
-                            navController.navigateTo(
-                                route = Teams.route,
-                                argument = leagueName
+                            navController.navigate(
+                                route = Destination.Teams.buildUri(leagueName)
                             )
                         },
                     )
                 }
 
                 composable(
-                    route = Teams.routeWithArgs,
+                    route = Destination.Teams.route,
                     arguments = listOf(
-                        navArgument(Teams.teamsArgs) {
-                            type = NavType.StringType
-                            nullable = false
-                        }
+                        Destination.Teams.teamsTypeNavArgument()
                     )
                 ) {
                     TeamsScreen(
@@ -56,14 +49,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-}
-
-fun NavHostController.navigateTo(route: String, argument: String) {
-    val route = "${route}/$argument"
-    this.navigate(route)
-}
-
-fun NavHostController.navigateToTeams(leagueName: String) {
-    val route = "${Teams.route}/$leagueName"
-    this.navigate(route)
 }
