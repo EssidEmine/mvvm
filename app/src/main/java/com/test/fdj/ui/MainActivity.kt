@@ -42,7 +42,10 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     TeamsScreen(
                         onBackPressed = {
-                            navController.popBackStack()
+                            navController.popBackStack(
+                                route = Destination.Leagues.route,
+                                inclusive = false
+                            )
                         },
                     )
                 }
