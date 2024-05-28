@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetTeamsUseCase {
 
-    operator fun invoke(param: String): Flow<Result<Teams>>
+    suspend operator fun invoke(param: String): Flow<Result<Teams>>
 }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SportRepository {
 
-    fun getAllLeagues(): Flow<Result<Leagues>>
+    suspend fun getAllLeagues(): Flow<Result<Leagues>>
 
-    fun getTeams(leagueName: String): Flow<Result<Teams>>
+    suspend fun getTeams(leagueName: String): Flow<Result<Teams>>
 }

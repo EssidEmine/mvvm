@@ -11,7 +11,7 @@ class GetTeamsUseCaseImpl @Inject constructor(
     private val sportRepository: SportRepository
 ) : GetTeamsUseCase {
 
-    override fun invoke(param: String): Flow<Result<Teams>> {
+    override suspend fun invoke(param: String): Flow<Result<Teams>> {
         return flow {
             sportRepository.getTeams(param)
                 .collect { result ->

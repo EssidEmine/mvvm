@@ -6,7 +6,7 @@ import com.test.fdj.data.model.Teams
 import com.test.fdj.data.model.TeamsDto
 import com.test.fdj.utils.Result.Error
 import com.test.fdj.utils.Result.Success
-import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -55,7 +55,7 @@ class TeamsMapperImplTest {
         // Arrange
         val response = Response.error<TeamsDto>(
             404,
-            ResponseBody.create(null, "Not Found")
+            "Not Found".toResponseBody(null)
         )
         // Act
         val result = mapper.map(response)

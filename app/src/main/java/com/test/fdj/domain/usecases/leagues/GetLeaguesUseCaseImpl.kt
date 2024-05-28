@@ -7,5 +7,5 @@ class GetLeaguesUseCaseImpl @Inject constructor(
     private val sportRepository: SportRepository
 ) : GetLeaguesUseCase {
 
-    override fun invoke() = sportRepository.getAllLeagues()
+    override suspend fun invoke() = sportRepository.getAllLeagues()
 }
