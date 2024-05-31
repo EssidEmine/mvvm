@@ -35,6 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.test.fdj.R
 import com.test.fdj.ui.screens.error.ErrorScreen
 import com.test.fdj.ui.screens.leagues.model.LeagueUiModel
+import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModelType.NETWORK
+import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModelType.UNKNOWN
 import com.test.fdj.ui.screens.leagues.model.LeaguesNavigation
 import com.test.fdj.ui.screens.leagues.model.LeaguesUiModel
 import com.test.fdj.utils.theme.FdjTheme
@@ -102,7 +104,13 @@ fun LeaguesScreen(
                 }
 
                 uiState.error?.let {
-                    ErrorScreen(error = it.label)
+                    ErrorScreen(
+                        error = it.label,
+                        iconId = when (it.type) {
+                            NETWORK -> R.drawable.cloud
+                            UNKNOWN -> R.drawable.football
+                        }
+                    )
                 }
             }
         )

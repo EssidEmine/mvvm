@@ -20,7 +20,13 @@ data class LeagueUiModel(
 @Parcelize
 data class LeaguesErrorUiModel(
     val label: String,
+    val type: LeaguesErrorUiModelType
 ) : Parcelable
+
+enum class LeaguesErrorUiModelType {
+    NETWORK,
+    UNKNOWN
+}
 
 @Parcelize
 sealed interface LeaguesNavigation : Parcelable {

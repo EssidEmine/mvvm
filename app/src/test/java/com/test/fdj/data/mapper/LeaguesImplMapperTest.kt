@@ -4,12 +4,12 @@ import com.test.fdj.data.model.LeagueDto
 import com.test.fdj.data.model.LeaguesDto
 import com.test.fdj.domain.models.League
 import com.test.fdj.domain.models.Leagues
-import com.test.fdj.utils.Result.Error
+import com.test.fdj.domain.models.LeaguesError
+import com.test.fdj.utils.Result
 import com.test.fdj.utils.Result.Success
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import retrofit2.Response
 
 class LeaguesImplMapperTest {
@@ -39,7 +39,7 @@ class LeaguesImplMapperTest {
         )
         val expectedResult = Success(expectedLeagues)
         // Assert
-        assertEquals(mapper.map(response), expectedResult)
+        assertEquals(expectedResult, mapper.map(response))
     }
 
     @Test
@@ -50,7 +50,7 @@ class LeaguesImplMapperTest {
             "Not Found".toResponseBody(null)
         )
         // Assert
-        assertTrue(mapper.map(response) is Error<*>)
+        assertEquals(Result.Error(LeaguesError.Network(response.message())), mapper.map(response))
     }
 }
 

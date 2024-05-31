@@ -2,6 +2,7 @@ package com.test.fdj.domain.usecases.leagues
 
 import com.test.fdj.data.repository.SportRepository
 import com.test.fdj.domain.models.Leagues
+import com.test.fdj.domain.models.LeaguesError
 import com.test.fdj.utils.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -40,9 +41,21 @@ class GetLeaguesUseCaseImplTest {
     }
 
     @Test
-    fun `invoke should return error when repository return error`() = runTest {
+    fun `invoke should return error when repository return Unknown error`() = runTest {
         // Arrange
-        val expectedResult = Result.Error<Leagues>(Exception("Error"))
+        val expectedResult = Result.Error(LeaguesError.Unknown("Unknown"))
+
+        given(sportRepository.getAllLeagues()).willReturn(flowOf(expectedResult))
+        // Act
+        val result = getLeaguesUseCase.invoke().first()
+        // Assert
+        assertEquals(expectedResult, result)
+    }
+
+    @Test
+    fun `invoke should return error when repository return Network error`() = runTest {
+        // Arrange
+        val expectedResult = Result.Error(LeaguesError.Network("Network"))
 
         given(sportRepository.getAllLeagues()).willReturn(flowOf(expectedResult))
         // Act

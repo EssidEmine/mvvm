@@ -3,11 +3,13 @@ package com.test.fdj.ui.screens.teams
 import androidx.lifecycle.SavedStateHandle
 import com.test.fdj.domain.models.Team
 import com.test.fdj.domain.models.Teams
+import com.test.fdj.domain.models.TeamsError
 import com.test.fdj.domain.usecases.teams.GetTeamsUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProviderImpl
 import com.test.fdj.ui.screens.teams.mapper.TeamsUiModelMapper
 import com.test.fdj.ui.screens.teams.model.TeamUiModel
 import com.test.fdj.ui.screens.teams.model.TeamsErrorUiModel
+import com.test.fdj.ui.screens.teams.model.TeamsErrorUiModelType
 import com.test.fdj.ui.screens.teams.model.TeamsUiModel
 import com.test.fdj.ui.statehandlers.UiModelHandlerFactory
 import com.test.fdj.ui.statehandlers.UiModelTestHandler
@@ -127,14 +129,16 @@ class TeamsViewModelTest {
     }
 
     @Test
-    fun `loadData - Error`() = runTest {
+    fun `loadData - Unknown Error`() = runTest {
         // Arrange
-        val errorMessage = "Network error"
+        val errorMessage = "Unknown error"
         val leagueName = "league"
         given(savedStateHandle.get<String>("leagueName")).willReturn(leagueName)
         given(getTeamsUseCaseImpl.invoke(leagueName)).willReturn(flow {
             emit(
-                Result.Error<Teams>(Exception(errorMessage))
+                Result.Error(
+                    TeamsError.Unknown(errorMessage)
+                )
             )
         })
         // Act
@@ -143,7 +147,38 @@ class TeamsViewModelTest {
         assertEquals(
             TeamsUiModel(
                 isLoading = false,
-                error = TeamsErrorUiModel(errorMessage)
+                error = TeamsErrorUiModel(
+                    label = errorMessage,
+                    type = TeamsErrorUiModelType.UNKNOWN
+                )
+            ),
+            uiModelHandler.lastValue
+        )
+    }
+
+    @Test
+    fun `loadData - Network Error`() = runTest {
+        // Arrange
+        val errorMessage = "Network error"
+        val leagueName = "league"
+        given(savedStateHandle.get<String>("leagueName")).willReturn(leagueName)
+        given(getTeamsUseCaseImpl.invoke(leagueName)).willReturn(flow {
+            emit(
+                Result.Error(
+                    TeamsError.Network(errorMessage)
+                )
+            )
+        })
+        // Act
+        initViewModel()
+        // Assert
+        assertEquals(
+            TeamsUiModel(
+                isLoading = false,
+                error = TeamsErrorUiModel(
+                    label = errorMessage,
+                    type = TeamsErrorUiModelType.NETWORK
+                )
             ),
             uiModelHandler.lastValue
         )
@@ -159,7 +194,10 @@ class TeamsViewModelTest {
         assertEquals(
             TeamsUiModel(
                 isLoading = false,
-                error = TeamsErrorUiModel("leagueName null error")
+                error = TeamsErrorUiModel(
+                    label = "leagueName null error",
+                    type = TeamsErrorUiModelType.GENERIC
+                )
             ),
             uiModelHandler.lastValue
         )

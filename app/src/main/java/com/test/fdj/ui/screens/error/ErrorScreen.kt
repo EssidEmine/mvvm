@@ -27,7 +27,8 @@ import com.test.fdj.utils.theme.FdjTheme
 @Composable
 fun ErrorScreen(
     modifier: Modifier = Modifier,
-    error: String
+    error: String,
+    iconId: Int,
 ) {
     FdjTheme {
         Column(
@@ -39,7 +40,7 @@ fun ErrorScreen(
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.football),
+                painter = painterResource(id = iconId),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -50,7 +51,7 @@ fun ErrorScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Whoops!!",
+                text = "Oh no!",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(top = 20.dp)
@@ -84,7 +85,8 @@ fun ErrorScreenPreview() {
         Modifier.background(MaterialTheme.colorScheme.background)
     ) {
         ErrorScreen(
-            error = "Something went wrong"
+            error = "Something went wrong",
+            iconId = R.drawable.football
         )
     }
 }

@@ -9,6 +9,7 @@ import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProvider
 import com.test.fdj.ui.screens.leagues.mapper.LeaguesUiModelMapper
 import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModel
+import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModelType
 import com.test.fdj.ui.screens.leagues.model.LeaguesNavigation
 import com.test.fdj.ui.screens.leagues.model.LeaguesUiModel
 import com.test.fdj.ui.statehandlers.UiModelHandlerFactory
@@ -65,29 +66,21 @@ class LeaguesViewModel @Inject constructor(
 
     private fun handleErrorType(error: LeaguesError) {
         viewModelScope.launch(dispatcherProvider.io) {
-            when (error) {
-                is LeaguesError.Network -> {
-                    //TODO EMINE SHOOW NETWORK ERROR UI
-                    uiModelHandler.updateUiModel { uiModel ->
-                        uiModel.copy(
-                            isLoading = false,
-                            error = LeaguesErrorUiModel(
-                                error.error
-                            )
+            uiModelHandler.updateUiModel { uiModel ->
+                uiModel.copy(
+                    isLoading = false,
+                    error = when (error) {
+                        is LeaguesError.Network -> LeaguesErrorUiModel(
+                            label = error.error,
+                            type = LeaguesErrorUiModelType.NETWORK
                         )
-                    }
-                }
 
-                is LeaguesError.Unknown -> {
-                    uiModelHandler.updateUiModel { uiModel ->
-                        uiModel.copy(
-                            isLoading = false,
-                            error = LeaguesErrorUiModel(
-                                error.error,
-                            )
+                        is LeaguesError.Unknown -> LeaguesErrorUiModel(
+                            label = error.error,
+                            type = LeaguesErrorUiModelType.UNKNOWN
                         )
                     }
-                }
+                )
             }
         }
     }

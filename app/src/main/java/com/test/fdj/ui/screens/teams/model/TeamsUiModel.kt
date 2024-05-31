@@ -19,4 +19,11 @@ data class TeamUiModel(
 @Parcelize
 data class TeamsErrorUiModel(
     val label: String,
+    val type: TeamsErrorUiModelType
 ) : Parcelable
+
+enum class TeamsErrorUiModelType {
+    NETWORK,
+    UNKNOWN,
+    GENERIC,
+}

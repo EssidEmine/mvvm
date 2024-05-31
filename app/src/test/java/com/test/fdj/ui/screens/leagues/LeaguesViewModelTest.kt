@@ -3,11 +3,13 @@ package com.test.fdj.ui.screens.leagues
 import androidx.lifecycle.SavedStateHandle
 import com.test.fdj.domain.models.League
 import com.test.fdj.domain.models.Leagues
-import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCase
+import com.test.fdj.domain.models.LeaguesError
+import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProviderImpl
 import com.test.fdj.ui.screens.leagues.mapper.LeaguesUiModelMapper
 import com.test.fdj.ui.screens.leagues.model.LeagueUiModel
 import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModel
+import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModelType
 import com.test.fdj.ui.screens.leagues.model.LeaguesNavigation
 import com.test.fdj.ui.screens.leagues.model.LeaguesUiModel
 import com.test.fdj.ui.statehandlers.UiModelHandlerFactory
@@ -37,7 +39,7 @@ class LeaguesViewModelTest {
     private lateinit var savedStateHandle: SavedStateHandle
 
     @Mock
-    private lateinit var getLeaguesUseCase: GetLeaguesUseCase
+    private lateinit var getLeaguesUseCase: GetLeaguesUseCaseImpl
 
     @Mock
     private lateinit var leaguesUiModelMapper: LeaguesUiModelMapper
@@ -112,13 +114,13 @@ class LeaguesViewModelTest {
     }
 
     @Test
-    fun `loadData - Error`() = runTest {
+    fun `loadData - Network Error`() = runTest {
         // Arrange
         val errorMessage = "Network error"
         given(getLeaguesUseCase.invoke()).willReturn(flow {
             emit(
-                Result.Error<Leagues>(
-                    Exception(errorMessage)
+                Result.Error(
+                    LeaguesError.Network(errorMessage)
                 )
             )
         })
@@ -128,7 +130,36 @@ class LeaguesViewModelTest {
         assertEquals(
             LeaguesUiModel(
                 isLoading = false,
-                error = LeaguesErrorUiModel(errorMessage)
+                error = LeaguesErrorUiModel(
+                    label = errorMessage,
+                    type = LeaguesErrorUiModelType.NETWORK
+                )
+            ),
+            uiModelHandler.lastValue
+        )
+    }
+
+    @Test
+    fun `loadData - Unknown Error`() = runTest {
+        // Arrange
+        val errorMessage = "Unknown error"
+        given(getLeaguesUseCase.invoke()).willReturn(flow {
+            emit(
+                Result.Error(
+                    LeaguesError.Unknown(errorMessage)
+                )
+            )
+        })
+        // Act
+        initViewModel()
+        // Assert
+        assertEquals(
+            LeaguesUiModel(
+                isLoading = false,
+                error = LeaguesErrorUiModel(
+                    label = errorMessage,
+                    type = LeaguesErrorUiModelType.UNKNOWN
+                )
             ),
             uiModelHandler.lastValue
         )

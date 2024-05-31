@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.test.fdj.R
 import com.test.fdj.ui.screens.error.ErrorScreen
+import com.test.fdj.ui.screens.teams.model.TeamsErrorUiModelType
 import com.test.fdj.ui.screens.teams.model.TeamsUiModel
 import com.test.fdj.utils.theme.FdjTheme
 
@@ -59,7 +61,11 @@ fun TeamsScreen(
 
                     uiState.error?.let {
                         ErrorScreen(
-                            error = it.label
+                            error = it.label,
+                            iconId = when (it.type) {
+                                TeamsErrorUiModelType.NETWORK -> R.drawable.cloud
+                                else -> R.drawable.football
+                            }
                         )
                     }
 

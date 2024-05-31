@@ -4,10 +4,10 @@ import com.test.fdj.data.model.TeamDto
 import com.test.fdj.data.model.TeamsDto
 import com.test.fdj.domain.models.Team
 import com.test.fdj.domain.models.Teams
-import com.test.fdj.utils.Result.Error
+import com.test.fdj.domain.models.TeamsError
+import com.test.fdj.utils.Result
 import com.test.fdj.utils.Result.Success
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.Assert
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import retrofit2.Response
@@ -60,6 +60,6 @@ class TeamsMapperImplTest {
         // Act
         val result = mapper.map(response)
         // Assert
-        Assert.assertTrue(result is Error<*>)
+        assertEquals(Result.Error(TeamsError.Network(response.message())), mapper.map(response))
     }
 }

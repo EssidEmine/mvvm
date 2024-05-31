@@ -3,6 +3,7 @@ package com.test.fdj.domain.usecases.teams
 import com.test.fdj.data.repository.SportRepository
 import com.test.fdj.domain.models.Team
 import com.test.fdj.domain.models.Teams
+import com.test.fdj.domain.models.TeamsError
 import com.test.fdj.utils.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -160,13 +161,28 @@ class GetTeamsUseCaseImplTest {
     }
 
     @Test
-    fun `invoke should return error when result is error`() = runTest {
+    fun `invoke should return error when result is Unknown error`() = runTest {
         // Arrange
         val givenLeague = "spanish league"
-        val expectedResult = Result.Error<Team>(Exception("Error"))
+        val expectedResult = Result.Error(TeamsError.Unknown("Unknown"))
 
         given(sportRepository.getTeams(givenLeague)).willReturn(flow {
-            emit(Result.Error<Team>(Exception("Error")))
+            emit(Result.Error(TeamsError.Unknown("Unknown")))
+        })
+        // Act
+        val result = getTeamsUseCase.invoke("spanish league").first()
+        // Assert
+        assertEquals(expectedResult.toString(), result.toString())
+    }
+
+    @Test
+    fun `invoke should return error when result is Network error`() = runTest {
+        // Arrange
+        val givenLeague = "spanish league"
+        val expectedResult = Result.Error(TeamsError.Network("Network"))
+
+        given(sportRepository.getTeams(givenLeague)).willReturn(flow {
+            emit(Result.Error(TeamsError.Network("Network")))
         })
         // Act
         val result = getTeamsUseCase.invoke("spanish league").first()

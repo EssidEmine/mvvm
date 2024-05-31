@@ -8,6 +8,7 @@ import com.test.fdj.domain.usecases.teams.GetTeamsUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProvider
 import com.test.fdj.ui.screens.teams.mapper.TeamsUiModelMapper
 import com.test.fdj.ui.screens.teams.model.TeamsErrorUiModel
+import com.test.fdj.ui.screens.teams.model.TeamsErrorUiModelType
 import com.test.fdj.ui.screens.teams.model.TeamsUiModel
 import com.test.fdj.ui.statehandlers.UiModelHandlerFactory
 import com.test.fdj.utils.Result
@@ -61,7 +62,8 @@ class TeamsViewModel @Inject constructor(
                     uiModel.copy(
                         isLoading = false,
                         error = TeamsErrorUiModel(
-                            "leagueName null error"
+                            "leagueName null error",
+                            type = TeamsErrorUiModelType.GENERIC
                         )
                     )
                 }
@@ -71,29 +73,21 @@ class TeamsViewModel @Inject constructor(
 
     private fun handleErrorType(error: TeamsError) {
         viewModelScope.launch(dispatcherProvider.io) {
-            when (error) {
-                is TeamsError.Network -> {
-                    // TODO EMINE HANDLE NETWORK ERROR
-                    uiModelHandler.updateUiModel { uiModel ->
-                        uiModel.copy(
-                            isLoading = false,
-                            error = TeamsErrorUiModel(
-                                error.error
-                            )
+            uiModelHandler.updateUiModel { uiModel ->
+                uiModel.copy(
+                    isLoading = false,
+                    error = when (error) {
+                        is TeamsError.Network -> TeamsErrorUiModel(
+                            label = error.error,
+                            type = TeamsErrorUiModelType.NETWORK
                         )
-                    }
-                }
 
-                is TeamsError.Unknown -> {
-                    uiModelHandler.updateUiModel { uiModel ->
-                        uiModel.copy(
-                            isLoading = false,
-                            error = TeamsErrorUiModel(
-                                error.error
-                            )
+                        is TeamsError.Unknown -> TeamsErrorUiModel(
+                            label = error.error,
+                            type = TeamsErrorUiModelType.UNKNOWN
                         )
                     }
-                }
+                )
             }
         }
     }
