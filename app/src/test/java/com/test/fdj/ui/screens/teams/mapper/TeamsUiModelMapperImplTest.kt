@@ -1,7 +1,7 @@
 package com.test.fdj.ui.screens.teams.mapper
 
-import com.test.fdj.data.model.Team
-import com.test.fdj.data.model.Teams
+import com.test.fdj.domain.models.Team
+import com.test.fdj.domain.models.Teams
 import com.test.fdj.ui.screens.teams.model.TeamUiModel
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -1,9 +1,9 @@
 package com.test.fdj.data.mapper
 
-import com.test.fdj.data.model.Team
 import com.test.fdj.data.model.TeamDto
-import com.test.fdj.data.model.Teams
 import com.test.fdj.data.model.TeamsDto
+import com.test.fdj.domain.models.Team
+import com.test.fdj.domain.models.Teams
 import com.test.fdj.utils.Result.Error
 import com.test.fdj.utils.Result.Success
 import okhttp3.ResponseBody.Companion.toResponseBody

@@ -3,6 +3,7 @@ package com.test.fdj.ui.screens.teams
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.test.fdj.domain.models.TeamsError
 import com.test.fdj.domain.usecases.teams.GetTeamsUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProvider
 import com.test.fdj.ui.screens.teams.mapper.TeamsUiModelMapper
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class TeamsViewModel @Inject constructor(
     private val getTeamsUseCaseImpl: GetTeamsUseCaseImpl,
     private val teamsUiModelMapper: TeamsUiModelMapper,
-    dispatcherProvider: DispatcherProvider,
+    val dispatcherProvider: DispatcherProvider,
     uiModelHandlerFactory: UiModelHandlerFactory,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -41,15 +42,8 @@ class TeamsViewModel @Inject constructor(
                 getTeamsUseCaseImpl.invoke(leagueName)
                     .collect {
                         when (val result = it) {
-                            is Result.Error<*> -> {
-                                uiModelHandler.updateUiModel { uiModel ->
-                                    uiModel.copy(
-                                        isLoading = false,
-                                        error = TeamsErrorUiModel(
-                                            result.exception.message ?: "Unknown error"
-                                        )
-                                    )
-                                }
+                            is Result.Error<TeamsError> -> {
+                                handleErrorType(result.error)
                             }
 
                             is Result.Success -> {
@@ -70,6 +64,35 @@ class TeamsViewModel @Inject constructor(
                             "leagueName null error"
                         )
                     )
+                }
+            }
+        }
+    }
+
+    private fun handleErrorType(error: TeamsError) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            when (error) {
+                is TeamsError.Network -> {
+                    // TODO EMINE HANDLE NETWORK ERROR
+                    uiModelHandler.updateUiModel { uiModel ->
+                        uiModel.copy(
+                            isLoading = false,
+                            error = TeamsErrorUiModel(
+                                error.error
+                            )
+                        )
+                    }
+                }
+
+                is TeamsError.Unknown -> {
+                    uiModelHandler.updateUiModel { uiModel ->
+                        uiModel.copy(
+                            isLoading = false,
+                            error = TeamsErrorUiModel(
+                                error.error
+                            )
+                        )
+                    }
                 }
             }
         }

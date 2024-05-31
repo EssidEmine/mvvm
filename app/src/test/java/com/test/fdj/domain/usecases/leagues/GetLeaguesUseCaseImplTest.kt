@@ -1,7 +1,7 @@
 package com.test.fdj.domain.usecases.leagues
 
-import com.test.fdj.data.model.Leagues
 import com.test.fdj.data.repository.SportRepository
+import com.test.fdj.domain.models.Leagues
 import com.test.fdj.utils.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf

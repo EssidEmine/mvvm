@@ -1,6 +1,6 @@
 package com.test.fdj.utils
 
-sealed class Result<out R> {
-    data class Success<out T>(val data: T) : Result<T>()
-    data class Error<out T>(val exception: Exception) : Result<Nothing>()
+sealed class Result<out T, out E> {
+    data class Success<T>(val data: T) : Result<T, Nothing>()
+    data class Error<E>(val error: E) : Result<Nothing, E>()
 }

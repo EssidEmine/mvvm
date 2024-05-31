@@ -3,8 +3,9 @@ package com.test.fdj.ui.screens.leagues
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.test.fdj.data.model.Leagues
-import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCase
+import com.test.fdj.domain.models.Leagues
+import com.test.fdj.domain.models.LeaguesError
+import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProvider
 import com.test.fdj.ui.screens.leagues.mapper.LeaguesUiModelMapper
 import com.test.fdj.ui.screens.leagues.model.LeaguesErrorUiModel
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LeaguesViewModel @Inject constructor(
-    private val getLeaguesUseCase: GetLeaguesUseCase,
+    private val getLeaguesUseCase: GetLeaguesUseCaseImpl,
     private val dispatcherProvider: DispatcherProvider,
     private val leaguesUiModelMapper: LeaguesUiModelMapper,
     uiModelHandlerFactory: UiModelHandlerFactory,
@@ -44,15 +45,8 @@ class LeaguesViewModel @Inject constructor(
             getLeaguesUseCase()
                 .collect {
                     when (val result = it) {
-                        is Result.Error<*> -> {
-                            uiModelHandler.updateUiModel { uiModel ->
-                                uiModel.copy(
-                                    isLoading = false,
-                                    error = LeaguesErrorUiModel(
-                                        result.exception.message ?: "Unknown error",
-                                    )
-                                )
-                            }
+                        is Result.Error<LeaguesError> -> {
+                            handleErrorType(result.error)
                         }
 
                         is Result.Success -> {
@@ -66,6 +60,35 @@ class LeaguesViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    private fun handleErrorType(error: LeaguesError) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            when (error) {
+                is LeaguesError.Network -> {
+                    //TODO EMINE SHOOW NETWORK ERROR UI
+                    uiModelHandler.updateUiModel { uiModel ->
+                        uiModel.copy(
+                            isLoading = false,
+                            error = LeaguesErrorUiModel(
+                                error.error
+                            )
+                        )
+                    }
+                }
+
+                is LeaguesError.Unknown -> {
+                    uiModelHandler.updateUiModel { uiModel ->
+                        uiModel.copy(
+                            isLoading = false,
+                            error = LeaguesErrorUiModel(
+                                error.error,
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 

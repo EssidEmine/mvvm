@@ -1,7 +1,7 @@
 package com.test.fdj.ui.screens.leagues.mapper
 
-import com.test.fdj.data.model.League
-import com.test.fdj.data.model.Leagues
+import com.test.fdj.domain.models.League
+import com.test.fdj.domain.models.Leagues
 import com.test.fdj.ui.screens.leagues.model.LeagueUiModel
 import org.junit.Assert.assertEquals
 import org.junit.Test

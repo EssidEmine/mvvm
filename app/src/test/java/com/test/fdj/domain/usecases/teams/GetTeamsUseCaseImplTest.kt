@@ -1,8 +1,8 @@
 package com.test.fdj.domain.usecases.teams
 
-import com.test.fdj.data.model.Team
-import com.test.fdj.data.model.Teams
 import com.test.fdj.data.repository.SportRepository
+import com.test.fdj.domain.models.Team
+import com.test.fdj.domain.models.Teams
 import com.test.fdj.utils.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

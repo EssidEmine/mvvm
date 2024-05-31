@@ -1,4 +1,4 @@
-package com.test.fdj.data.model
+package com.test.fdj.domain.models
 
 data class Teams(
     val content: List<Team>?
@@ -13,3 +13,13 @@ data class Team(
     val strCountry: String,
     val strLeague: String
 )
+
+sealed class TeamsError {
+    data class Unknown(
+        val error: String,
+    ) : TeamsError()
+
+    data class Network(
+        val error: String,
+    ) : TeamsError()
+}

@@ -1,6 +1,6 @@
 package com.test.fdj.ui.screens.leagues.mapper
 
-import com.test.fdj.data.model.Leagues
+import com.test.fdj.domain.models.Leagues
 import com.test.fdj.ui.screens.leagues.model.LeagueUiModel
 import javax.inject.Inject
 

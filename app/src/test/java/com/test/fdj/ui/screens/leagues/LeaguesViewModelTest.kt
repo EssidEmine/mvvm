@@ -1,8 +1,8 @@
 package com.test.fdj.ui.screens.leagues
 
 import androidx.lifecycle.SavedStateHandle
-import com.test.fdj.data.model.League
-import com.test.fdj.data.model.Leagues
+import com.test.fdj.domain.models.League
+import com.test.fdj.domain.models.Leagues
 import com.test.fdj.domain.usecases.leagues.GetLeaguesUseCase
 import com.test.fdj.ui.dispatchers.DispatcherProviderImpl
 import com.test.fdj.ui.screens.leagues.mapper.LeaguesUiModelMapper

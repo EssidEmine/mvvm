@@ -1,9 +1,9 @@
 package com.test.fdj.data.mapper
 
-import com.test.fdj.data.model.League
 import com.test.fdj.data.model.LeagueDto
-import com.test.fdj.data.model.Leagues
 import com.test.fdj.data.model.LeaguesDto
+import com.test.fdj.domain.models.League
+import com.test.fdj.domain.models.Leagues
 import com.test.fdj.utils.Result.Error
 import com.test.fdj.utils.Result.Success
 import okhttp3.ResponseBody.Companion.toResponseBody

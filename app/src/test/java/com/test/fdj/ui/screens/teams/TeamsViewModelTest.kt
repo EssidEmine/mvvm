@@ -1,8 +1,8 @@
 package com.test.fdj.ui.screens.teams
 
 import androidx.lifecycle.SavedStateHandle
-import com.test.fdj.data.model.Team
-import com.test.fdj.data.model.Teams
+import com.test.fdj.domain.models.Team
+import com.test.fdj.domain.models.Teams
 import com.test.fdj.domain.usecases.teams.GetTeamsUseCaseImpl
 import com.test.fdj.ui.dispatchers.DispatcherProviderImpl
 import com.test.fdj.ui.screens.teams.mapper.TeamsUiModelMapper
